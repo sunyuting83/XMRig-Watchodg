@@ -10,6 +10,7 @@ libs/
 build.txt
 config.yaml
 XMRigWatchdog.spec
+tmp/
 
 
 # Distribution / packaging

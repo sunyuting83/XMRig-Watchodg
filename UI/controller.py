@@ -16,6 +16,7 @@ class MainController:
         self.mainView = MainView()
         self.program_path = program_path
         self.program_name = os.path.join(program_path, program_name)
+        self.my_self_name = program_name
         self.yamlpath = os.path.join(program_path, "config.yaml")
         self.configData = yaml_data
         file_path, self.myself_ext = os.path.splitext(program_name)
@@ -64,7 +65,7 @@ class MainController:
                 self.mainView.checkBox.setChecked(False)
         
         # 开启更新检测线程
-        c_thread = Thread(target=CheckUpdate, args=(self.program_path, ))
+        c_thread = Thread(target=CheckUpdate, args=(self.program_path, self.my_self_name,))
         c_thread.start()
         gl_info['check_thread'] = c_thread
         

@@ -11,7 +11,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from public import version
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -48,6 +47,10 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_20.sizePolicy().hasHeightForWidth())
         self.label_20.setSizePolicy(sizePolicy)
+        self.label_20.setMinimumSize(QtCore.QSize(72, 25))
+        self.label_20.setMaximumSize(QtCore.QSize(72, 25))
+        self.label_20.setAutoFillBackground(True)
+        self.label_20.setTextFormat(QtCore.Qt.PlainText)
         self.label_20.setObjectName("label_20")
         self.horizontalLayout_10.addWidget(self.label_20)
         self.progressBar = QtWidgets.QProgressBar(self.horizontalLayoutWidget_10)

@@ -20,17 +20,21 @@ def DownloadFile(url, filename):
         # print('[文件名称]:', filename)
         # print('[文件大小]: {:.3f} MB'.format(content_size / chunk_size / 1024))
         with open(f"{filename}", 'wb') as f:
+            percen:int = 0
             for data in res.iter_content(chunk_size=chunk_size):
                 f.write(data)
                 size += len(data)  # 已下载文件大小
-                gl_thread_lock.acquire()
-                UpdateProgress(int(size / content_size * 100))
-                gl_thread_lock.release()
+                percentage:int = int(size / content_size * 100)
+                if percentage > percen or percentage == 100:
+                    gl_thread_lock.acquire()
+                    UpdateProgress(percentage)
+                    gl_thread_lock.release()
+                percen = percentage
                 # print('\r[下载进度]: {}{:.2f}%'.format('>' * int(size * 50 / content_size), float(size / content_size * 100)),end='')  # 下载进度条
 
     end = time.time()  # 结束时间
     gl_thread_lock.acquire()
-    setLog('[下载时间]: {:.2f}s'.format(end - start))
+    setLog('[下载用时]: {:.2f}s'.format(end - start))
     gl_thread_lock.release()
     # print("\n[下载时间]: {:.2f}s".format(end - start))
     # print("".center(100, "*"))

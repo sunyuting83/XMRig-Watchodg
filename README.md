@@ -56,3 +56,14 @@ pyinstaller --noconfirm --windowed --icon "icon/icon.ico" --name "XMRigWatchdog"
 如果不使用upx就把 --upx-dir "你的upx路径" 从命令中去掉
 
 打包好的程序在dist目录中
+
+### 捐赠
+zeph
+```
+ZEPHs9Fkw8PAB1n2qx5m8FLXrYpZqWh7Na9W5uoSbTNtVuHiHc8fPBhgSsByWJti6RNGf8zfbAHc1d3AawnfWyMCaV16LomPqRq
+```
+
+xmr
+```
+88zqFaxMu9W4zaX6pxs2THV8XCnoE2a2Hgd1gSo4rP5kRfoBwXpHAVGAexEa1vcDexAZ1nsB4wK3BeqajJKnsnheUkq4oqb
+```

@@ -6,7 +6,7 @@ from public import DEV
 if __name__ == "__main__":
     program_name = os.path.basename(sys.argv[0])
     if DEV:
-        program_name = "start.bat"
+        program_name = "python.exe"
     filePath = os.path.abspath(sys.argv[0])
     programPath = os.path.dirname(filePath)
     from Utils.utils import checkFirst, CheckConfigFile

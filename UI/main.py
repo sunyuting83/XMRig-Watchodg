@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 from .MainWin import Ui_MainWindow
 from PyQt5.QtWidgets import QWidget, QMenu
 from PyQt5.QtCore import Qt
