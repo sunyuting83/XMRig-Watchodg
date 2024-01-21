@@ -1,0 +1,9 @@
+PyQt5
+PyQt5-Qt5
+PyQt5-sip
+PyQt5-stubs
+PyYAML
+pywin32
+pywin32-ctypes
+requests
+pyinstaller
