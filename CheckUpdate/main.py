@@ -1,4 +1,5 @@
 import os
+import subprocess
 from public import version, gl_thread_lock, gl_thread_event
 from Utils.httpServer import HttpGet
 from Utils.utils import compareVersion, CheckPath, stop_thread, KillExecNameDontCheck
@@ -37,6 +38,10 @@ class CheckUpdate:
         TemFilePath = os.path.join(TemPath, 'XMRigWatchdog.zip')
         DownloadFile(DownUri, TemFilePath)
         setLog("软件更新中结束,1秒后程序自动关闭")
+        
+        command = os.path.join(self.program_path, 'update.exe')
+        subprocess.run(f'start cmd /c ' + command, shell=True)
+        
         self.event.wait(1)
         KillExecNameDontCheck(self.my_self_name)
         # print('下载完成')

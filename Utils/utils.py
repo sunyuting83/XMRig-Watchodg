@@ -30,17 +30,17 @@ def CheckConfigFile(config_path):
     desired_caps['PoolSocks5'] = ""
     desired_caps['PoolDonate'] = 0
     if os.path.exists(config_path) == False:
-        print("yamlfile none")
+        # print("yamlfile none")
         SaveConfigFile(config_path, desired_caps)
     yamlData = ReadConfigFile(config_path)
     
     if yamlData == None:
-        print("yamlData none")
+        # print("yamlData none")
         SaveConfigFile(config_path, desired_caps)
         yamlData = ReadConfigFile(config_path)
     else:
         if 'XmrigPath' not in yamlData:
-            print("XmrigPath none")
+            # print("XmrigPath none")
             yamlData["XmrigPath"] = ""
         if 'PoolUri' not in yamlData:
             yamlData["PoolUri"] = ""
@@ -62,6 +62,7 @@ def CheckConfigFile(config_path):
 
 
 def _async_raise(tid, exctype):
+    # print(tid)
     """raises the exception, performs cleanup if needed"""
     try:
         tid = ctypes.c_long(tid)
@@ -69,12 +70,12 @@ def _async_raise(tid, exctype):
             exctype = type(exctype)
         res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(exctype))
         if res == 0:
-            raise ValueError("invalid thread id")
+            pass
         elif res != 1:
         # """if it returns a number greater than one, you're in trouble, 
         # and you should call it again with exc=NULL to revert the effect""" 
             ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
-            raise SystemError("PyThreadState_SetAsyncExc failed")
+            # raise SystemError("PyThreadState_SetAsyncExc failed")
     except WindowsError:
         # print("错误信息")
         # print(e)
@@ -116,22 +117,35 @@ def BuckupCommand(command):
 def checkFirst(appName, dev = False):
     pid_number = 1
     SystemPath = getDocPath()
-    command = SystemPath+'''\\wbem\\wmic process where "name like '%%'''+appName+'''%%'" get ProcessId'''
-    # print(command)
-    # print(pid_number)
-    child = subprocess.Popen(command, universal_newlines=True, shell=True, stdout=subprocess.PIPE, encoding="GBK")
-    child.wait()
-    pidList = child.stdout.readlines()
+    wbem_path = '%s\\wbem\\'% (SystemPath)
+    hasWmic = os.path.exists(wbem_path)
+    pidList = []
+    command = "tasklist /fo csv /nh"
+    if hasWmic:
+        command = wbem_path+'''wmic process where "name like '%%'''+appName+'''%%'" get ProcessId'''   
+        child = subprocess.Popen(command, universal_newlines=True, shell=True, stdout=subprocess.PIPE, encoding="GBK")
+        child.wait()
+        pidList = child.stdout.readlines()
+    else:
+        child = subprocess.Popen(command, universal_newlines=True, shell=True, stdout=subprocess.PIPE, encoding="GBK")
+        output, _ = child.communicate()
+        pidList = output.split('\n')
+    
     PID = []
     for item in pidList:
         www = item.strip()
         if len(www) != 0:
-            if "ProcessId" not in www:
-                PID.append(www)
+            if hasWmic:
+                if "ProcessId" not in www:
+                    PID.append(www)
+            else:
+                if appName in www:
+                    PID.append(www)
     if dev:
         pid_number = 4
     # print(len(PID))
     # time.sleep(15)
+    print(PID)
     if len(PID) <= pid_number:
         return True
     else:
@@ -139,19 +153,30 @@ def checkFirst(appName, dev = False):
 
 def checkRunning(appName):
     SystemPath = getDocPath()
-    command = SystemPath+'''\\wbem\\wmic process where "name like '%%'''+appName+'''%%'" get ProcessId'''
-    # print(command)
-    # print(pid_number)
-    child = subprocess.Popen(command, universal_newlines=True, shell=True, stdout=subprocess.PIPE, encoding="GBK")
-    child.wait()
-    pidList = child.stdout.readlines()
+    wbem_path = '%s\\wbem\\'% (SystemPath)
+    hasWmic = os.path.exists(wbem_path)
+    pidList = []
+    command = "tasklist /fo csv /nh"
+    if hasWmic:
+        command = wbem_path+'''wmic process where "name like '%%'''+appName+'''%%'" get ProcessId'''   
+        child = subprocess.Popen(command, universal_newlines=True, shell=True, stdout=subprocess.PIPE, encoding="GBK")
+        child.wait()
+        pidList = child.stdout.readlines()
+    else:
+        child = subprocess.Popen(command, universal_newlines=True, shell=True, stdout=subprocess.PIPE, encoding="GBK")
+        output, _ = child.communicate()
+        pidList = output.split('\n')
     PID = []
     for item in pidList:
         www = item.strip()
         if len(www) != 0:
-            if "ProcessId" not in www:
-                # print(www)
-                PID.append(www)
+            if hasWmic:
+                if "ProcessId" not in www:
+                    PID.append(int(www))
+            else:
+                if appName in www:
+                    pid = int(www.split(',')[1].replace('"', ''))
+                    PID.append(pid)
     # time.sleep(15)
     if len(PID) >= 1:
         return PID[0], PID

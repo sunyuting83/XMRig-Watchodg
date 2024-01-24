@@ -11,6 +11,8 @@ build.txt
 config.yaml
 XMRigWatchdog.spec
 tmp/
+_internal/
+update.exe
 
 
 # Distribution / packaging
@@ -37,7 +39,6 @@ MANIFEST
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
 *.spec
 
 # Installer logs
