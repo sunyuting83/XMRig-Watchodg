@@ -349,7 +349,7 @@ func main() {
 				log.Println("更新成功,正在退出……\r\n")
 				log.Println("启动主程序")
 				time.Sleep(1000 * time.Millisecond)
-				RunExec(ExecPath)
+				go RunExec(ExecPath)
 				time.Sleep(1000 * time.Millisecond)
 				os.Exit(3)
 			}

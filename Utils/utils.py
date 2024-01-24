@@ -30,17 +30,14 @@ def CheckConfigFile(config_path):
     desired_caps['PoolSocks5'] = ""
     desired_caps['PoolDonate'] = 0
     if os.path.exists(config_path) == False:
-        # print("yamlfile none")
         SaveConfigFile(config_path, desired_caps)
     yamlData = ReadConfigFile(config_path)
     
     if yamlData == None:
-        # print("yamlData none")
         SaveConfigFile(config_path, desired_caps)
         yamlData = ReadConfigFile(config_path)
     else:
         if 'XmrigPath' not in yamlData:
-            # print("XmrigPath none")
             yamlData["XmrigPath"] = ""
         if 'PoolUri' not in yamlData:
             yamlData["PoolUri"] = ""
@@ -105,15 +102,6 @@ def RunCommand(command):
         time.sleep(0.5)
         RunCommand(command)
 
-
-def BuckupCommand(command):
-    try:
-        child = subprocess.check_output(command, universal_newlines=True, shell=True, encoding="GBK", timeout= 60 * 10)
-        return child
-    except:
-        return None
-
-
 def checkFirst(appName, dev = False):
     pid_number = 1
     SystemPath = getDocPath()
@@ -145,7 +133,7 @@ def checkFirst(appName, dev = False):
         pid_number = 4
     # print(len(PID))
     # time.sleep(15)
-    print(PID)
+    # print(PID)
     if len(PID) <= pid_number:
         return True
     else:
@@ -186,22 +174,6 @@ def checkRunning(appName):
 def CheckPath(p):
     if os.path.exists(p) == False:
         os.mkdir(p)
-
-def Str2Time(timestr):
-    date01 = datetime.date.today().strftime('%Y-%m-%d')
-    tstr = date01+' '+timestr
-    dateTime = datetime.datetime.strptime(tstr,'%Y-%m-%d %H:%M:%S')
-    return dateTime
-
-def CurrentTime():
-    return datetime.datetime.now().replace(microsecond=0)
-
-def CurrentTimeWithoutSecond():
-    return datetime.datetime.now().replace(second=0, microsecond=0)
-def CurrentNewTimeWithoutSecond():
-    current_datetime = datetime.datetime.now()
-    newtime = current_datetime + datetime.timedelta(minutes=10)
-    return newtime.replace(second=0, microsecond=0)
 
 def CurrentTimeStr():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -320,6 +292,6 @@ def make_even_num(num):
             num_list.append(i)
     return num_list
 
-if __name__ == '__main__':
-	print(compareVersion('v1.0.1', 'v1.0.1'))
+# if __name__ == '__main__':
+# 	print(compareVersion('v1.0.1', 'v1.0.1'))
 
