@@ -13,6 +13,16 @@
 ##### 2024/1/25
 - 添加更新程序
 
+### 下载发行版
+- github点击Releases并下载最新版本
+- gitee点击 发行版 并下载最新版本
+
+
+```bash
+#右键点击下载好的.zip文件 再点击
+解压到 "XMRigWatchdog\"(E)
+```
+
 ### 自行构建
 clone本项目到本机
 下载python-3.12.0-embed-amd64.zip并解压 修改目录名为libs 拷贝至程序目录
