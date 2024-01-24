@@ -282,18 +282,10 @@ func (lv *LogView) Write(p []byte) (int, error) {
 
 func main() {
 	var appName string
+	var xmrName string
 	flag.StringVar(&appName, "appname", "XMRigWatchdog.exe", "Program Name")
+	flag.StringVar(&xmrName, "xmrname", "xmrig.exe", "XMRig Name")
 	flag.Parse()
-	pid, err := getWatchdogPid(appName)
-	if err != nil {
-		fmt.Println("发生错误,请手动更新")
-		return
-	}
-	if pid != 0 {
-		pidStr := strconv.Itoa(pid)
-		process := strings.Join([]string{"taskkill /f /pid", pidStr}, " ")
-		RunCommand(process)
-	}
 
 	CurrentPath, _ := GetCurrentPath()
 	ExecPath := strings.Join([]string{CurrentPath, appName}, "\\")
@@ -319,20 +311,46 @@ func main() {
 	lv.PostAppendText("正在准备更新……\r\n")
 	log.SetOutput(lv)
 	go func() {
+		pid, err := getWatchdogPid(appName)
+		if err != nil {
+			log.Println("发生错误,请手动更新")
+			return
+		}
+		if pid != 0 {
+			pidStr := strconv.Itoa(pid)
+			process := strings.Join([]string{"taskkill /f /pid", pidStr}, " ")
+			RunCommand(process)
+		}
+
+		xmr_pid, err := getWatchdogPid(xmrName)
+		if err != nil {
+			log.Println("发生错误,请手动更新")
+			return
+		}
+		if xmr_pid != 0 {
+			pidStr := strconv.Itoa(xmr_pid)
+			process := strings.Join([]string{"taskkill /f /pid", pidStr}, " ")
+			RunCommand(process)
+		}
 		log.Println("正在检测更新文件是否存在")
 		TempFile, fileSuffix := GetAllFile(TmpPath)
 		// log.Println(internalPath)
 		if TempFile != "" {
-			log.Println("更新文件存在, 升级中……")
+			log.Println("更新文件存在, 升级中……\r\n")
 			if fileSuffix == ".exe" {
-				log.Println("正在删除旧文件……")
+				log.Println("正在删除旧文件……\r\n")
 				os.Remove(ExecPath)
+				time.Sleep(1000 * time.Millisecond)
 				os.Remove(internalPath)
-				log.Println("正在拷贝新文件……")
+				time.Sleep(1000 * time.Millisecond)
+				log.Println("正在拷贝新文件……\r\n")
 				os.Rename(TempFile, ExecPath)
-				log.Println("更新成功,正在退出……")
+				time.Sleep(1000 * time.Millisecond)
+				log.Println("更新成功,正在退出……\r\n")
 				log.Println("启动主程序")
+				time.Sleep(1000 * time.Millisecond)
 				RunExec(ExecPath)
+				time.Sleep(1000 * time.Millisecond)
 				os.Exit(3)
 			}
 			log.Println("正在删除旧文件……\r\n")

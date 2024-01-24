@@ -65,7 +65,8 @@ class MainController:
                 self.mainView.checkBox.setChecked(False)
         
         # 开启更新检测线程
-        c_thread = Thread(target=CheckUpdate, args=(self.program_path, self.my_self_name,))
+        _, xmrigName = os.path.split(self.configData["XmrigPath"])
+        c_thread = Thread(target=CheckUpdate, args=(self.program_path, self.my_self_name, xmrigName,))
         c_thread.start()
         gl_info['check_thread'] = c_thread
         

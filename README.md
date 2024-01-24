@@ -10,6 +10,8 @@
 ### 更新日志
 ##### 2024/1/21
 - 添加更新检测
+##### 2024/1/25
+- 添加更新程序
 
 ### 自行构建
 clone本项目到本机
@@ -61,6 +63,29 @@ pyinstaller --noconfirm --windowed --icon "icon/icon.ico" --name "XMRigWatchdog"
 
 打包好的程序在dist目录中
 
+### 构建更新程序
+首先安装好golang环境
+
+##### 设置golang代理
+```bash
+go env -w GOPROXY=https://goproxy.cn,direct
+```
+
+##### 打开go modules功能
+```bash
+go env -w GO111MODULE=on
+```
+
+##### 安装依赖
+```bash
+go mod tidy
+```
+
+##### 打包update.exe
+```bash
+go build -ldflags="-s -w -H windowsgui" -o update.exe
+```
+---
 ### 捐赠
 zeph
 ```

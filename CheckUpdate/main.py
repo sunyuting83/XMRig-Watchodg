@@ -8,10 +8,11 @@ from UI.view import setLog
 from public import gl_info
 
 class CheckUpdate:
-    def __init__(self, program_path, my_self_name):
+    def __init__(self, program_path, my_self_name, xmrigName):
         super().__init__()
         self.program_path = program_path
         self.my_self_name = my_self_name
+        self.xmrig_name = xmrigName
         self.event = gl_thread_event
         self.start_check()
     
@@ -40,6 +41,7 @@ class CheckUpdate:
         setLog("软件更新中结束,1秒后程序自动关闭")
         
         command = os.path.join(self.program_path, 'update.exe')
+        command = '%s --appname %s --xmrname %s'% (command, self.my_self_name, self.xmrig_name)
         subprocess.run(f'start cmd /c ' + command, shell=True)
         
         self.event.wait(1)
