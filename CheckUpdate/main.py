@@ -34,17 +34,14 @@ class CheckUpdate:
             self.event.wait(3600) #3600
     
     def UpdateExec(self, DownUri):
-        # print('辅助更新中')
         setLog("软件更新中……")
         TemPath = os.path.join(self.program_path, 'tmp')
         CheckPath(TemPath)
         TemFilePath = os.path.join(TemPath, 'XMRigWatchdog.zip')
-        # DownloadFile(DownUri, TemFilePath)
+        DownloadFile(DownUri, TemFilePath)
         setLog("软件更新中结束,1秒后程序自动关闭")
         command = os.path.join(self.program_path, 'update.exe')
         command = '%s --appname %s --xmrname %s'% (command, self.my_self_name, self.xmrig_name)
-        # setLog(command)
-        # time.sleep(30)
         subprocess.run(f'start {command}', shell=True)
         
         self.event.wait(1)
