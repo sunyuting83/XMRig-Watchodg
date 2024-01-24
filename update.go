@@ -105,6 +105,9 @@ func Unzip(source, destination string) error {
 	defer zipReader.Close()
 
 	for _, file := range zipReader.File {
+		if file.Name == "update.exe" {
+			continue // 忽略特定文件
+		}
 		filePath := filepath.Join(destination, file.Name)
 
 		if file.FileInfo().IsDir() {
@@ -349,7 +352,7 @@ func main() {
 				log.Println("更新成功,正在退出……\r\n")
 				log.Println("启动主程序")
 				time.Sleep(1000 * time.Millisecond)
-				go RunExec(ExecPath)
+				RunExec(ExecPath)
 				time.Sleep(1000 * time.Millisecond)
 				os.Exit(3)
 			}
@@ -364,7 +367,7 @@ func main() {
 			os.Remove(TempFile)
 			time.Sleep(1000 * time.Millisecond)
 			log.Println("启动主程序\r\n")
-			go RunExec(ExecPath)
+			RunExec(ExecPath)
 			time.Sleep(1000 * time.Millisecond)
 			os.Exit(3)
 		}

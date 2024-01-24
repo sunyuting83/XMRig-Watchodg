@@ -13,6 +13,8 @@ class CheckUpdate:
         self.program_path = program_path
         self.my_self_name = my_self_name
         self.xmrig_name = xmrigName
+        if self.xmrig_name == '':
+            self.xmrig_name = 'xmrig.exe'
         self.event = gl_thread_event
         self.start_check()
     
@@ -37,18 +39,13 @@ class CheckUpdate:
         TemPath = os.path.join(self.program_path, 'tmp')
         CheckPath(TemPath)
         TemFilePath = os.path.join(TemPath, 'XMRigWatchdog.zip')
-        DownloadFile(DownUri, TemFilePath)
+        # DownloadFile(DownUri, TemFilePath)
         setLog("软件更新中结束,1秒后程序自动关闭")
-        
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        startupinfo.wShowWindow = subprocess.SW_HIDE
-        
-        # command = os.path.join(self.program_path, 'update.exe')
-        program = os.path.join(self.program_path, 'update.exe')
-        args = [program, "--appname=XMRigWatchdog.exe", "--xmrname=xmrig.exe"]
-        # command = '%s --appname %s --xmrname %s'% (command, self.my_self_name, self.xmrig_name)
-        os.spawnv(os.P_NOWAIT, program, args)
+        command = os.path.join(self.program_path, 'update.exe')
+        command = '%s --appname %s --xmrname %s'% (command, self.my_self_name, self.xmrig_name)
+        # setLog(command)
+        # time.sleep(30)
+        subprocess.run(f'start {command}', shell=True)
         
         self.event.wait(1)
         KillExecNameDontCheck(self.my_self_name)
