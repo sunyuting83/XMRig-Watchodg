@@ -9,7 +9,7 @@ gl_info = {
 gl_thread_lock = threading.Lock()       # 全局锁
 gl_thread_event = threading.Event()
 
-version:str = 'v0.0.5'
+version:str = 'v0.0.6'
 
 DEV = False
 
