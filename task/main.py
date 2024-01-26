@@ -105,6 +105,15 @@ class TaskMain:
                             setLabel('status', error_value['XmrStatus3'])
                             setLog('最新算力值：' + speed_num + 'H/s')
                             setLabel('speed', speed_num + 'H/s')
+                            if 'n/aH/s' in line_txt:
+                                setLog(error_value['XmrStatus2'])
+                                setLabel('status', error_value['XmrStatus2'])
+                                KillPid(pid, "xmrig.exe")
+                                gl_thread_lock.acquire()
+                                self.Status = False
+                                gl_thread_lock.release()
+                                hasError = False
+                                break
                             if '.' in speed_num:
                                 speed_num = speed_num.split('.')[0]
                             if int(speed_num) < 100:

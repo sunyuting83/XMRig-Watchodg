@@ -17,6 +17,7 @@ class Ui_MainWindow(object):
         MainWindow.resize(405, 451)
         font = QtGui.QFont()
         font.setFamily("微软雅黑")
+        font.setPointSize(9)
         MainWindow.setFont(font)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("icon/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
