@@ -92,13 +92,13 @@ class TaskMain:
                         if 'verify server' in line_txt:
                             hasError = self.restart(error_value['XmrStatus4'])
                             break
-                        if 'n/a' in line_txt:
-                            hasError = self.restart(error_value['XmrStatus2'])
-                            break
                         if 'miner' in line_txt:
                             line_list = line_txt.split(' ')
                             speed_index = line_list.index('speed')
                             speed_num = line_list[speed_index + 2]
+                            if 'n/a' in speed_num:
+                                hasError = self.restart(error_value['XmrStatus2'])
+                                break
                             setLabel('status', error_value['XmrStatus3'])
                             setLog('最新算力值：' + speed_num + 'H/s')
                             setLabel('speed', speed_num + 'H/s')
