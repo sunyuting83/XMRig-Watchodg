@@ -14,6 +14,7 @@ class TaskMain:
         xmr_path = os.path.abspath(os.path.dirname(config_data['XmrigPath']))
         self.config_path = os.path.join(xmr_path,'config.json')
         self.run_exec = '%s -c %s'% (config_data['XmrigPath'], self.config_path)
+        self.Exec_name = os.path.basename(config_data['XmrigPath'])
         self.Exec_PID = None
         self.Status = False
         
@@ -55,14 +56,19 @@ class TaskMain:
         gl_thread_lock.release()
         setLog(error_value['XmrConfig'])
     
+    def restart(self, message):
+        setLog(message)
+        setLabel('status', message)
+        KillPid(self.Exec_PID, self.Exec_name)
+        self.Status = False
+        return False
+    
     def start(self):
         while True:
             if self.Status == False:
                 process = subprocess.Popen(self.run_exec, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, creationflags = subprocess.CREATE_NO_WINDOW)
-                pid = process.pid
-                gl_thread_lock.acquire()
+                self.Exec_PID = process.pid
                 self.Status = True
-                gl_thread_lock.release()
                 hasError = True
                 while hasError:
                     for line in iter(process.stdout.readline, b''):
@@ -81,22 +87,13 @@ class TaskMain:
                         if 'MOTHERBOARD' in  line_txt:
                             setLabel('board', line_txt.split('  ')[1])
                         if 'error:' in  line_txt:
-                            setLog(error_value['XmrStatus2'])
-                            setLabel('status', error_value['XmrStatus2'])
-                            KillPid(pid, "xmrig.exe")
-                            gl_thread_lock.acquire()
-                            self.Status = False
-                            gl_thread_lock.release()
-                            hasError = False
+                            hasError = self.restart(error_value['XmrStatus2'])
                             break
                         if 'verify server' in line_txt:
-                            setLog(error_value['XmrStatus4'])
-                            setLabel('status', error_value['XmrStatus4'])
-                            KillPid(pid, "xmrig.exe")
-                            gl_thread_lock.acquire()
-                            self.Status = False
-                            gl_thread_lock.release()
-                            hasError = False
+                            hasError = self.restart(error_value['XmrStatus4'])
+                            break
+                        if 'n/a' in line_txt:
+                            hasError = self.restart(error_value['XmrStatus2'])
                             break
                         if 'miner' in line_txt:
                             line_list = line_txt.split(' ')
@@ -105,36 +102,17 @@ class TaskMain:
                             setLabel('status', error_value['XmrStatus3'])
                             setLog('最新算力值：' + speed_num + 'H/s')
                             setLabel('speed', speed_num + 'H/s')
-                            if 'n/aH/s' in line_txt:
-                                setLog(error_value['XmrStatus2'])
-                                setLabel('status', error_value['XmrStatus2'])
-                                KillPid(pid, "xmrig.exe")
-                                gl_thread_lock.acquire()
-                                self.Status = False
-                                gl_thread_lock.release()
-                                hasError = False
-                                break
                             if '.' in speed_num:
                                 speed_num = speed_num.split('.')[0]
                             if int(speed_num) < 100:
-                                setLog(error_value['XmrStatus2'])
-                                setLabel('status', error_value['XmrStatus2'])
-                                KillPid(pid, "xmrig.exe")
-                                gl_thread_lock.acquire()
-                                self.Status = False
-                                gl_thread_lock.release()
-                                hasError = False
+                                hasError = self.restart(error_value['XmrStatus2'])
                                 break
                             continue
                     
                     self.event.wait(60)
-                    PID, _ = checkRunning('xmrig.exe')
+                    PID, _ = checkRunning(self.Exec_name)
                     if PID == 0:
-                        setLog(error_value['XmrStatus2'])
-                        setLabel('status', error_value['XmrStatus2'])
-                        gl_thread_lock.acquire()
-                        self.Status = False
-                        gl_thread_lock.release()
+                        self.restart(error_value['XmrStatus2'])
                         break
 
                 process.wait()

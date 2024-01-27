@@ -186,6 +186,8 @@ def KillPid(pid, exec_name):
             PID, _ = checkRunning(exec_name)
             if PID == 0:
                 break
+            else:
+                KillExecNameDontCheck(exec_name)
     except WindowsError:
         raise
 
