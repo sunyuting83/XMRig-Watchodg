@@ -8,9 +8,10 @@ from UI.view import setLog
 from public import gl_info
 
 class CheckUpdate:
-    def __init__(self, program_path, my_self_name, xmrigName):
+    def __init__(self, program_path, my_self_name, xmrigName, language_data):
         super().__init__()
         self.program_path = program_path
+        self.language_data = language_data
         self.my_self_name = my_self_name
         self.xmrig_name = xmrigName
         if self.xmrig_name == '':
@@ -34,12 +35,12 @@ class CheckUpdate:
             self.event.wait(3600) #3600
     
     def UpdateExec(self, DownUri):
-        setLog("软件更新中……")
+        setLog(self.language_data['Updating'])
         TemPath = os.path.join(self.program_path, 'tmp')
         CheckPath(TemPath)
         TemFilePath = os.path.join(TemPath, 'XMRigWatchdog.zip')
-        DownloadFile(DownUri, TemFilePath)
-        setLog("软件更新中结束,1秒后程序自动关闭")
+        DownloadFile(DownUri, TemFilePath, self.language_data)
+        setLog(self.language_data['SoftwareUpdateCompleted'])
         command = os.path.join(self.program_path, 'update.exe')
         command = '%s --appname %s --xmrname %s'% (command, self.my_self_name, self.xmrig_name)
         subprocess.run(f'start {command}', shell=True)

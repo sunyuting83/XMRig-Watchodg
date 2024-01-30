@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 import time
 from .MainWin import Ui_MainWindow
-from PyQt5.QtWidgets import QWidget, QMenu
+from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
 from public import gl_info, gl_thread_event
 from Utils.utils import stop_thread, KillExecNameDontCheck
-# from database.db import GetTaskList
 
 class MainView(Ui_MainWindow,QWidget):
     def __init__(self):
         super(MainView,self).__init__()
         self.setupUi(self)
-        self.retranslateUi(self)
-        self.menu = QMenu()
+        # self.retranslateUi(self)
         self.ui_init()
 
     # 界面窗口关闭信号
@@ -29,7 +27,6 @@ class MainView(Ui_MainWindow,QWidget):
         
 
     def ui_init(self):
-        """ 自定义 ui """
         self.pushButton.setEnabled(False)
         self.label_20.setVisible(False)
         self.progressBar.setVisible(False)

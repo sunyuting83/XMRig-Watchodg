@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import subprocess
 import json
 from Utils.utils import make_even_num, KillPid, checkRunning
-from public import gl_thread_lock, gl_thread_event, DEV, error_value
+from public import gl_thread_lock, gl_thread_event, DEV
 from UI.view import setLog, setLabel
 
 class TaskMain:
-    def __init__(self, config_data):
+    def __init__(self, config_data, language_data):
         super().__init__()
         self.config_data = config_data
         self.event = gl_thread_event
+        self.language_data = language_data
         xmr_path = os.path.abspath(os.path.dirname(config_data['XmrigPath']))
         self.config_path = os.path.join(xmr_path,'config.json')
         self.run_exec = '%s -c %s'% (config_data['XmrigPath'], self.config_path)
@@ -54,7 +56,7 @@ class TaskMain:
             json.dump(json_obj, json_f)
             self.event.wait(0.3)
         gl_thread_lock.release()
-        setLog(error_value['XmrConfig'])
+        setLog(self.language_data['XmrConfig'])
     
     def restart(self, message):
         setLog(message)
@@ -75,45 +77,53 @@ class TaskMain:
                         line_txt = line.decode('utf-8').strip()
                         # print(line_txt)
                         if 'HUGE' in  line_txt:
-                            setLog(error_value['XmrStatus1'])
-                            setLabel('status', error_value['XmrStatus1'])
-                            setLabel('huge', line_txt.split('   ')[1])
+                            setLog(self.language_data['XmrStatus1'])
+                            setLabel('status', self.language_data['XmrStatus1'])
+                            setLabel('huge', self.make_value(line_txt))
                         if '1GB PAGES' in  line_txt:
-                            setLabel('pages', line_txt.split('    ')[1])
+                            setLabel('pages', self.make_value(line_txt))
                         if 'CPU' in  line_txt:
-                            setLabel('cpu', line_txt.split('          ')[1])
+                            setLabel('cpu', self.make_value(line_txt))
                         if 'MEMORY' in  line_txt:
-                            setLabel('mem', line_txt.split('       ')[1])
+                            setLabel('mem', self.make_value(line_txt))
                         if 'MOTHERBOARD' in  line_txt:
-                            setLabel('board', line_txt.split('  ')[1])
+                            setLabel('board', self.make_value(line_txt))
+                        if 'DONATE' in  line_txt:
+                            setLabel('donate', self.make_value(line_txt))
                         if 'error:' in  line_txt:
-                            hasError = self.restart(error_value['XmrStatus2'])
+                            hasError = self.restart(self.language_data['XmrStatus2'])
                             break
                         if 'verify server' in line_txt:
-                            hasError = self.restart(error_value['XmrStatus4'])
+                            hasError = self.restart(self.language_data['XmrStatus4'])
                             break
                         if 'miner' in line_txt:
                             line_list = line_txt.split(' ')
                             speed_index = line_list.index('speed')
                             speed_num = line_list[speed_index + 2]
                             if 'n/a' in speed_num:
-                                hasError = self.restart(error_value['XmrStatus2'])
+                                hasError = self.restart(self.language_data['XmrStatus2'])
                                 break
-                            setLabel('status', error_value['XmrStatus3'])
-                            setLog('最新算力值：' + speed_num + 'H/s')
+                            setLabel('status', self.language_data['XmrStatus3'])
+                            setLog(self.language_data['LastSpeed'] + speed_num + 'H/s')
                             setLabel('speed', speed_num + 'H/s')
                             if '.' in speed_num:
                                 speed_num = speed_num.split('.')[0]
                             if int(speed_num) < 100:
-                                hasError = self.restart(error_value['XmrStatus2'])
+                                hasError = self.restart(self.language_data['XmrStatus2'])
                                 break
                             continue
                     
                     self.event.wait(60)
                     PID, _ = checkRunning(self.Exec_name)
                     if PID == 0:
-                        self.restart(error_value['XmrStatus2'])
+                        self.restart(self.language_data['XmrStatus2'])
                         break
 
                 process.wait()
             self.event.wait(60)
+    
+    def make_value(self, data):
+        match = re.match(r'\* ([\w\s]+)\s{2,}(.+)', data)
+        if match:
+            value = match.group(2).strip()
+        return value

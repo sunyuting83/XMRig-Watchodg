@@ -13,6 +13,7 @@ XMRigWatchdog.spec
 tmp/
 _internal/
 update.exe
+Language/
 
 
 # Distribution / packaging
