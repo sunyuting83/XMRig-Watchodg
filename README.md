@@ -72,7 +72,7 @@ python main.py
 ```
 ##### 打包
 ```bash
-pyinstaller --noconfirm --windowed --icon "icon/icon.ico" --name "XMRigWatchdog" --upx-dir "你的upx路径"  --add-data "icon;."  "main.py"
+pyinstaller --noconfirm --windowed --icon "icon/icon.ico" --name "XMRigWatchdog" --upx-dir "你的upx路径"  "main.py"
 ```
 如果不使用upx就把 --upx-dir "你的upx路径" 从命令中去掉
 
