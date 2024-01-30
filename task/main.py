@@ -123,6 +123,7 @@ class TaskMain:
             self.event.wait(60)
     
     def make_value(self, data):
+        # use re
         match = re.match(r'\* ([\w\s]+)\s{2,}(.+)', data)
         if match:
             value = match.group(2).strip()
