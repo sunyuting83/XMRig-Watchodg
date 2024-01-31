@@ -1,5 +1,7 @@
 # XMRig Watchdog
 ---
+### [中文](/README.md) | [English](docs/README-EN.md)
+
 ### 说明
 一个使用python + pyqt5开发的xmrig可视化监工程序,配置简单 自动启动并检测xmrig运行情况
 
@@ -59,10 +61,6 @@ python -m pip install virtualenv
 
 双击install.bat
 
-将public.py文件中的DEV变量值改成True
-```python
-DEV = True
-```
 ##### 测试
 打开cmd窗口并cd到程序目录 运行
 ```bash
