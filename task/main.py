@@ -124,6 +124,7 @@ class TaskMain:
     
     def make_value(self, data):
         # use re
+        value = self.language_data['NotYetAcquired']
         match = re.match(r'\* ([\w\s]+)\s{2,}(.+)', data)
         if match:
             value = match.group(2).strip()

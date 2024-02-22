@@ -20,10 +20,11 @@ A visual monitoring program for xmrig developed using python + pyqt5, with simpl
 ##### 2024/1/27
 - Fixed issues causing xmrig to fail to restart due to "n/a".
 - Optimized watchdog code for restarting xmrig.
-2024/1/31
 ##### 2024/1/31
 - Added language selection.
 - Optimized mining rig information retrieval using regular expressions (re) instead of split.
+##### 2024/2/22
+- Fix program crashes caused by uninitialized 'value' in obtaining PC information.
 
 ### Download Releases
 - On GitHub, click on "Releases" and download the latest version.
